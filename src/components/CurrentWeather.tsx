@@ -48,7 +48,7 @@ export default function CurrentWeather() {
             <p className="text-5xl font-bold max-[520px]:text-3xl max-[425px]:text-2xl">
                {name}, {sys?.country}
             </p>
-            <svg className="size-12 text-amber-400 max-[520px]:size-9 max-[425px]:size-8">
+            <svg className="size-12 max-[520px]:size-9 max-[425px]:size-8">
                <use xlinkHref={`#${weather?.[0].icon}`} />
             </svg>
          </div>
