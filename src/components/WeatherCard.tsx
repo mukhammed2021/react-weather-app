@@ -4,12 +4,26 @@ import Header from "./Header";
 import WeatherDetails from "./WeatherDetails";
 import Loading from "./Loading";
 import Error from "./Error";
-import { type weatherDataProps } from "../lib/types";
 
-type WeatherCardContextTypes = weatherDataProps & {
+type weatherDataTypes = {
+   name?: string;
+   main: Record<string, number>;
+   sys?: {
+      country?: string;
+   };
+   weather?: [
+      {
+         description?: string;
+         icon?: string;
+      },
+   ];
+   wind?: Record<string, number>;
+};
+
+type WeatherCardContextTypes = weatherDataTypes & {
    query: string;
    setQuery: React.Dispatch<React.SetStateAction<string>>;
-   setWeatherData: React.Dispatch<React.SetStateAction<weatherDataProps>>;
+   setWeatherData: React.Dispatch<React.SetStateAction<weatherDataTypes>>;
    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
@@ -23,8 +37,8 @@ export default function WeatherCard() {
    const [query, setQuery] = useState("");
    const [isLoading, setIsLoading] = useState(false);
    const [error, setError] = useState(false);
-   const [weatherData, setWeatherData] = useState<weatherDataProps>(
-      {} as weatherDataProps,
+   const [weatherData, setWeatherData] = useState<weatherDataTypes>(
+      {} as weatherDataTypes,
    );
    const { name, main, sys, weather, wind } = weatherData;
 
