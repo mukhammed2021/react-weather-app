@@ -1,16 +1,14 @@
 export type weatherDataProps = {
-   name: string;
-   main: {
-      feels_like: number;
-      temp: number;
+   name?: string;
+   main: Record<string, number>;
+   sys?: {
+      country?: string;
    };
-   sys: {
-      country: string;
-   };
-   weather: [
+   weather?: [
       {
-         description: string;
-         icon: string;
+         description?: string;
+         icon?: string;
       },
    ];
+   wind?: Record<string, number>;
 };
