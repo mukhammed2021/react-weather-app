@@ -1,39 +1,57 @@
 import { useToggleTheme } from "../hooks/useToggleTheme";
 import { type weatherDataProps } from "../lib/types";
+import Icon from "./Icon";
 import { API_KEY } from "./WeatherCard";
 
 type HeaderProps = {
    query: string;
    setQuery: React.Dispatch<React.SetStateAction<string>>;
    setWeatherData: React.Dispatch<React.SetStateAction<weatherDataProps>>;
+   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function Header({
    query,
    setQuery,
    setWeatherData,
+   setIsLoading,
 }: HeaderProps) {
    const { theme, handleTheme } = useToggleTheme();
 
    function handleWeather() {
-      async function coords() {
-         const resCoords = await fetch(
-            `https://nominatim.openstreetmap.org/search?format=json&city=${query}&limit=1`,
-         );
-         const dataCoords = await resCoords.json();
+      if (query.trim() === "") {
+         setQuery("");
+         return;
+      }
 
-         const res = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?lat=${dataCoords[0]?.lat}&lon=${dataCoords[0]?.lon}&appid=${API_KEY}&units=metric&lang=ru`,
-         );
-         const data = await res.json();
-         setWeatherData(data);
+      async function coords() {
+         try {
+            setIsLoading(true);
+            const resCoords = await fetch(
+               `https://nominatim.openstreetmap.org/search?format=json&city=${query}&limit=1`,
+            );
+            const dataCoords = await resCoords.json();
+
+            const res = await fetch(
+               `https://api.openweathermap.org/data/2.5/weather?lat=${dataCoords[0]?.lat}&lon=${dataCoords[0]?.lon}&appid=${API_KEY}&units=metric&lang=ru`,
+            );
+            const data = await res.json();
+            setWeatherData(data);
+         } finally {
+            setIsLoading(false);
+            setQuery("");
+         }
       }
       coords();
    }
 
    return (
       <header className="mb-11 flex items-center gap-1 max-[520px]:mb-9 max-[425px]:mb-6">
-         <button type="button" onClick={handleTheme}>
+         <button
+            type="button"
+            onClick={handleTheme}
+            className="rounded transition-colors hover:bg-slate-300 dark:hover:bg-slate-700"
+         >
             {theme === "dark" ? (
                <Icon xlinkHref="light" />
             ) : (
@@ -56,19 +74,13 @@ export default function Header({
                className="block w-full appearance-none rounded-lg bg-transparent px-3 py-2 placeholder:text-slate-400 dark:placeholder:text-slate-300"
             />
          </form>
-         <button type="button" onClick={handleWeather}>
+         <button
+            type="button"
+            onClick={handleWeather}
+            className="rounded transition-colors hover:bg-slate-300 dark:hover:bg-slate-700"
+         >
             <Icon xlinkHref="search" />
          </button>
       </header>
-   );
-}
-
-type IconPros = React.ComponentPropsWithoutRef<"use">;
-
-function Icon({ xlinkHref }: IconPros) {
-   return (
-      <svg className="size-6 rounded transition-colors hover:bg-slate-300 dark:hover:bg-slate-700">
-         <use xlinkHref={`#${xlinkHref}`} />
-      </svg>
    );
 }
