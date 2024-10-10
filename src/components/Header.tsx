@@ -25,6 +25,9 @@ export default function Header() {
             const res = await fetch(
                `https://api.openweathermap.org/data/2.5/weather?lat=${dataCoords[0]?.lat}&lon=${dataCoords[0]?.lon}&appid=${API_KEY}&units=metric&lang=ru`,
             );
+
+            if (!res.ok) return;
+
             const data = await res.json();
             setWeatherData(data);
          } finally {
