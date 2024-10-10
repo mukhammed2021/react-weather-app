@@ -1,47 +1,13 @@
-import { useEffect, useState } from "react";
+import { weatherDataProps } from "../lib/types";
 
-type weatherDataProps = {
-   name: string;
-   main: {
-      feels_like: number;
-      temp: number;
-   };
-   sys: {
-      country: string;
-   };
-   weather: [
-      {
-         description: string;
-         icon: string;
-      },
-   ];
-};
+type CurrentWeatherProps = weatherDataProps;
 
-const API_KEY = "27d8da6e759b5d35bbd2a90d55e38a90";
-
-export default function CurrentWeather() {
-   const [weatherData, setWeatherData] = useState<weatherDataProps>(
-      {} as weatherDataProps,
-   );
-   const { name, main, sys, weather } = weatherData;
-
-   useEffect(() => {
-      function success(pos: GeolocationPosition) {
-         const { latitude, longitude } = pos.coords;
-
-         async function weather() {
-            const res = await fetch(
-               `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric&lang=ru`,
-            );
-            const data = await res.json();
-            setWeatherData(data);
-         }
-         weather();
-      }
-
-      navigator.geolocation.getCurrentPosition(success);
-   }, []);
-
+export default function CurrentWeather({
+   name,
+   main,
+   sys,
+   weather,
+}: CurrentWeatherProps) {
    return (
       <>
          <div className="mb-2 flex items-center gap-4">
