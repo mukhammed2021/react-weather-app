@@ -1,6 +1,14 @@
 import { useToggleTheme } from "../hooks/useToggleTheme";
+import { type weatherDataProps } from "../lib/types";
+import { API_KEY } from "./WeatherCard";
 
-export default function Header() {
+type HeaderProps = {
+   query: string;
+   setQuery: React.Dispatch<React.SetStateAction<string>>;
+   setWeatherData: React.Dispatch<React.SetStateAction<weatherDataProps>>;
+};
+
+export default function Header({ query, setQuery, setWeatherData }: HeaderProps) {
    const { theme, handleTheme } = useToggleTheme();
 
    return (
@@ -12,8 +20,29 @@ export default function Header() {
                <Icon xlinkHref="dark" />
             )}
          </button>
-         <form className="grow">
+         <form
+            onSubmit={(e) => {
+               e.preventDefault();
+
+               async function coords() {
+                  const resCoords = await fetch(
+                     `https://nominatim.openstreetmap.org/search?format=json&city=${query}&limit=1`,
+                  );
+                  const dataCoords = await resCoords.json();
+
+                  const res = await fetch(
+                     `https://api.openweathermap.org/data/2.5/weather?lat=${dataCoords[0]?.lat}&lon=${dataCoords[0]?.lon}&appid=${API_KEY}&units=metric&lang=ru`,
+                  );
+                  const data = await res.json();
+                  setWeatherData(data);
+               }
+               coords();
+            }}
+            className="grow"
+         >
             <input
+               value={query}
+               onChange={(e) => setQuery(e.target.value)}
                type="search"
                placeholder="Введите город"
                autoComplete="off"
