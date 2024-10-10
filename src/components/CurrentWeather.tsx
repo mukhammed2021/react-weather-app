@@ -1,13 +1,9 @@
-import { weatherDataProps } from "../lib/types";
+import { useContext } from "react";
+import { WeatherCardContext } from "./WeatherCard";
 
-type CurrentWeatherProps = weatherDataProps;
+export default function CurrentWeather() {
+   const { name, main, sys, weather } = useContext(WeatherCardContext);
 
-export default function CurrentWeather({
-   name,
-   main,
-   sys,
-   weather,
-}: CurrentWeatherProps) {
    return (
       <>
          <div className="mb-2 flex items-center gap-4">

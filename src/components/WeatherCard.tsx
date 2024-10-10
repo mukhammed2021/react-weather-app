@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import CurrentWeather from "./CurrentWeather";
 import Header from "./Header";
 import WeatherDetails from "./WeatherDetails";
@@ -6,7 +6,18 @@ import Loading from "./Loading";
 import Error from "./Error";
 import { type weatherDataProps } from "../lib/types";
 
+type WeatherCardContextTypes = weatherDataProps & {
+   query: string;
+   setQuery: React.Dispatch<React.SetStateAction<string>>;
+   setWeatherData: React.Dispatch<React.SetStateAction<weatherDataProps>>;
+   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 export const API_KEY = "27d8da6e759b5d35bbd2a90d55e38a90";
+
+export const WeatherCardContext = createContext<WeatherCardContextTypes>(
+   {} as WeatherCardContextTypes,
+);
 
 export default function WeatherCard() {
    const [query, setQuery] = useState("");
@@ -45,31 +56,35 @@ export default function WeatherCard() {
    }, []);
 
    return (
-      <div className="rounded-xl bg-white/75 px-8 pb-6 pt-4 max-[520px]:px-7 max-[425px]:px-5 max-[375px]:px-4 dark:bg-black/75">
-         {error && (
-            <>
-               <Loading />
-               <Error />
-            </>
-         )}
-         {isLoading && <Loading />}
-         {!isLoading && !error && (
-            <>
-               <Header
-                  query={query}
-                  setQuery={setQuery}
-                  setWeatherData={setWeatherData}
-                  setIsLoading={setIsLoading}
-               />
-               <CurrentWeather
-                  name={name}
-                  main={main}
-                  sys={sys}
-                  weather={weather}
-               />
-               <WeatherDetails main={main} wind={wind} />
-            </>
-         )}
-      </div>
+      <WeatherCardContext.Provider
+         value={{
+            query,
+            setQuery,
+            setWeatherData,
+            setIsLoading,
+            name,
+            main,
+            sys,
+            weather,
+            wind,
+         }}
+      >
+         <div className="rounded-xl bg-white/75 px-8 pb-6 pt-4 max-[520px]:px-7 max-[425px]:px-5 max-[375px]:px-4 dark:bg-black/75">
+            {error && (
+               <>
+                  <Loading />
+                  <Error />
+               </>
+            )}
+            {isLoading && <Loading />}
+            {!isLoading && !error && (
+               <>
+                  <Header />
+                  <CurrentWeather />
+                  <WeatherDetails />
+               </>
+            )}
+         </div>
+      </WeatherCardContext.Provider>
    );
 }

@@ -1,8 +1,9 @@
-import { weatherDataProps } from "../lib/types";
+import { useContext } from "react";
+import { WeatherCardContext } from "./WeatherCard";
 
-type WeatherDetailsProps = weatherDataProps;
+export default function WeatherDetails() {
+   const { main, wind } = useContext(WeatherCardContext);
 
-export default function WeatherDetails({ main, wind }: WeatherDetailsProps) {
    return (
       <div className="flex justify-around gap-2">
          <div className="flex-1 text-center">

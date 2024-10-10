@@ -1,21 +1,11 @@
+import { useContext } from "react";
 import { useToggleTheme } from "../hooks/useToggleTheme";
-import { type weatherDataProps } from "../lib/types";
 import Icon from "./Icon";
-import { API_KEY } from "./WeatherCard";
+import { API_KEY, WeatherCardContext } from "./WeatherCard";
 
-type HeaderProps = {
-   query: string;
-   setQuery: React.Dispatch<React.SetStateAction<string>>;
-   setWeatherData: React.Dispatch<React.SetStateAction<weatherDataProps>>;
-   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-export default function Header({
-   query,
-   setQuery,
-   setWeatherData,
-   setIsLoading,
-}: HeaderProps) {
+export default function Header() {
+   const { query, setQuery, setWeatherData, setIsLoading } =
+      useContext(WeatherCardContext);
    const { theme, handleTheme } = useToggleTheme();
 
    function handleWeather() {
