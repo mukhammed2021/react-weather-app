@@ -1,4 +1,8 @@
-export default function WeatherDetails() {
+import { weatherDataProps } from "../lib/types";
+
+type WeatherDetailsProps = weatherDataProps;
+
+export default function WeatherDetails({ main, wind }: WeatherDetailsProps) {
    return (
       <div className="flex justify-around gap-2">
          <div className="flex-1 text-center">
@@ -6,7 +10,7 @@ export default function WeatherDetails() {
                Ветер
             </p>
             <div className="text-2xl font-semibold max-[520px]:text-base">
-               2
+               {wind?.speed}
                <span className="text-base font-normal max-[520px]:text-xs">
                   м/с
                </span>
@@ -17,7 +21,7 @@ export default function WeatherDetails() {
                Влажность
             </p>
             <div className="text-2xl font-semibold max-[520px]:text-base">
-               68
+               {main?.humidity}
                <span className="text-base font-normal max-[520px]:text-xs">
                   %
                </span>
@@ -28,7 +32,7 @@ export default function WeatherDetails() {
                Давление
             </p>
             <div className="text-2xl font-semibold max-[520px]:text-base">
-               768{" "}
+               {Math.round(main?.pressure * 0.75)}{" "}
                <p className="text-base font-normal max-[520px]:text-xs">
                   мм рт.ст.
                </p>
